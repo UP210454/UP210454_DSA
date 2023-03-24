@@ -1,6 +1,7 @@
-import math
+# Luis Fernando de la Cruz Robledo UP210454 ISC04A
 from tkinter import *
 from collections import deque
+import math
 
 ventana = Tk()
 ventana.title("Calculadora")
@@ -9,28 +10,28 @@ ventana.configure(background="light sky blue")
 i = 0
 
 # Entrada
-e_texto = Entry(ventana, font=("Calibri 30"), background="cyan3")
-e_texto.grid(row=0, column=0, columnspan=8, padx=5, pady=5)
+e_texto = Entry(ventana, font="Calibri 30", background="cyan3", width=22, borderwidth=30 )
+e_texto.grid(row=0, column=0, columnspan=10, padx=1, pady=5)
 
 
 def enlistar(op):
     op = list(op)
-    op.append('a')
+    op.append('b')
     op2 = []
     stack = deque()
     for i in op:
 
-        if i not in ['+', '-', '/', '*', '(', ')', 'a', '^']:
+        if i not in ['+', '-', '/', '*', '(', ')', 'b', '^']:
             stack.append(i)
-        elif i in ['+', '-', '/', '*', '(', ')', 'a', '^']:
+        elif i in ['+', '-', '/', '*', '(', ')', 'b', '^']:
             contador = len(stack) - 1
-            a = ''
+            b = ''
             while contador >= 0 and stack[contador] not in ['+', '-', '/', '*']:
-                a = a + stack.popleft()
+                b = b + stack.popleft()
                 contador -= 1
-            if a != '':
-                op2.append(a)
-            if i != 'a':
+            if b != '':
+                op2.append(b)
+            if i != 'b':
                 op2.append(i)
     return op2
 
@@ -50,7 +51,7 @@ def posfix(expresion):
             stack.append(p[i])
         elif p[i] in operadores or p[i] in funciones:
             contador = len(stack) - 1
-            if (prioridad(p[i])) >= (prioridad(stack[contador])):
+            if (prioridad(p[i])) > (prioridad(stack[contador])):
                 stack.append(p[i])
             else:
                 posfix.append(stack.pop())
@@ -62,7 +63,7 @@ def posfix(expresion):
                 contador -= 1
             stack.pop()
         else:
-            posfix.append(int(p[i]))
+            posfix.append(p[i])
     return posfix
 
 
@@ -111,11 +112,14 @@ def valor(expresion):
                     C = 10 ** A
                 elif vector[i] == "aln":
                     C = math.e ** A
+                C = round(C, 4)
                 stack.append(C)
             except:
                 return "Math Error"
-
-    resultado = str(stack.pop())
+        else:
+            stack.append(vector[i])
+        i += 1
+    resultado = stack.pop()
     return resultado
 
 
@@ -124,9 +128,9 @@ def prioridad(C):
         return 1
     elif C in ["*", "/"]:
         return 2
-    elif C in funciones:
-        return 3
     elif C in ["^"]:
+        return 3
+    elif C in funciones:
         return 4
     elif C in ["(", ")"]:
         return 0
@@ -137,10 +141,18 @@ def click_boton(valor):
     e_texto.insert(i, valor)
     i += 1
 
+
 def click_boton_funcion(valor):
     global i
-    e_texto.insert(i,valor)
-    i = i + 4
+    e_texto.insert(i, valor)
+    i += 4
+
+
+def click_boton_funcion_inversa(valor):
+    global i
+    e_texto.insert(i, valor)
+    i += 5
+
 def borrar():
     e_texto.delete(0, END)
     i = 0
@@ -172,20 +184,27 @@ boton9 = Button(ventana, text="9", width=8, height=4, command=lambda: click_boto
 boton0 = Button(ventana, text="0", width=8, height=4, command=lambda: click_boton(0), background="RoyalBlue1")
 
 boton_borrar = Button(ventana, text="AC", width=8, height=4, command=lambda: borrar(), background="red")
-boton_parentesis1 = Button(ventana, text="(", width=8, height=4, command=lambda: click_boton("("),
-                           background="RoyalBlue1")
-boton_parentesis2 = Button(ventana, text=")", width=8, height=4, command=lambda: click_boton(")"),
-                           background="RoyalBlue1")
-boton_punto = Button(ventana, text=".", width=8, height=4, command=lambda: click_boton("."), background="RoyalBlue1")
+boton_parentesis1 = Button(ventana, text="(", width=8, height=4, command=lambda: click_boton("("), background="RoyalBlue3")
+boton_parentesis2 = Button(ventana, text=")", width=8, height=4, command=lambda: click_boton(")"), background="RoyalBlue3")
+boton_punto = Button(ventana, text=".", width=8, height=4, command=lambda: click_boton("."), background="RoyalBlue3")
 
-boton_division = Button(ventana, text="/", width=8, height=4, command=lambda: click_boton("/"), background="RoyalBlue1")
-boton_multiplicacion = Button(ventana, text="  *", width=8, height=4, command=lambda: click_boton("*"),
-                              background="RoyalBlue1")
-boton_suma = Button(ventana, text="+", width=8, height=4, command=lambda: click_boton("+"), background="RoyalBlue1")
-boton_resta = Button(ventana, text="-", width=8, height=4, command=lambda: click_boton("-"), background="RoyalBlue1")
-boton_igual = Button(ventana, text="=", width=8, height=4, command=lambda: operacion(), background="RoyalBlue1")
-boton_potencia = Button(ventana, text="^", width=8, height=4, command=lambda: click_boton("^"), background="RoyalBlue1")
-boton_seno = Button(ventana, text="sen", width=8, height=4, command=lambda: click_boton_funcion("sin("), background="RoyalBlue1")
+boton_division = Button(ventana, text="/", width=8, height=4, command=lambda: click_boton("/"), background="RoyalBlue3")
+boton_multiplicacion = Button(ventana, text="  *", width=8, height=4, command=lambda: click_boton("*"), background="RoyalBlue3")
+boton_suma = Button(ventana, text="+", width=8, height=4, command=lambda: click_boton("+"), background="RoyalBlue3")
+boton_resta = Button(ventana, text="-", width=8, height=4, command=lambda: click_boton("-"), background="RoyalBlue3")
+boton_igual = Button(ventana, text="=", width=8, height=4, command=lambda: operacion(), background="RoyalBlue3")
+boton_potencia = Button(ventana, text="^", width=8, height=4, command=lambda: click_boton("^"), background="RoyalBlue3")
+boton_seno = Button(ventana, text="sin", width=8, height=4, command=lambda: click_boton_funcion("sin("), background="RoyalBlue3")
+boton_coseno = Button(ventana, text="cos", width=8, height=4, command=lambda: click_boton_funcion("cos("), background="RoyalBlue3")
+boton_tangente = Button(ventana, text="tan", width=8, height=4, command=lambda: click_boton_funcion("tan("), background="RoyalBlue3")
+boton_log = Button(ventana, text="log", width=8, height=4, command=lambda: click_boton_funcion("log("), background="RoyalBlue3")
+boton_ln = Button(ventana, text="ln", width=8, height=4, command=lambda: click_boton_funcion("ln("), background="RoyalBlue3")
+boton_asin = Button(ventana, text="asin", width=8, height=4, command=lambda: click_boton_funcion_inversa("asin("), background="RoyalBlue3")
+boton_acos = Button(ventana, text="acos", width=8, height=4, command=lambda: click_boton_funcion_inversa("acos("), background="RoyalBlue3")
+boton_atan = Button(ventana, text="atan", width=8, height=4, command=lambda: click_boton_funcion_inversa("atan("), background="RoyalBlue3")
+boton_alog = Button(ventana, text="alog", width=8, height=4, command=lambda: click_boton_funcion_inversa("alog("), background="RoyalBlue3")
+boton_aln = Button(ventana, text="aln", width=8, height=4, command=lambda: click_boton_funcion("aln("), background="RoyalBlue3")
+
 
 # Agregar botones
 boton_borrar.grid(row=1, column=0, padx=5, pady=5)
@@ -193,28 +212,36 @@ boton_parentesis1.grid(row=1, column=1, padx=5, pady=5)
 boton_parentesis2.grid(row=1, column=2, padx=5, pady=5)
 boton_division.grid(row=1, column=3, padx=5, pady=5)
 boton_seno.grid(row=1, column=4, padx=5, pady=5)
+boton_asin.grid(row=1, column=5, padx=5, pady=5)
+
+
 
 boton7.grid(row=2, column=0, padx=5, pady=5)
 boton8.grid(row=2, column=1, padx=5, pady=5)
 boton9.grid(row=2, column=2, padx=5, pady=5)
 boton_multiplicacion.grid(row=2, column=3, padx=5, pady=5)
+boton_coseno.grid(row=2, column=4, padx=5, pady=5)
+boton_acos.grid(row=2, column=5, padx=5, pady=5)
 
 boton4.grid(row=3, column=0, padx=5, pady=5)
 boton5.grid(row=3, column=1, padx=5, pady=5)
 boton6.grid(row=3, column=2, padx=5, pady=5)
 boton_suma.grid(row=3, column=3, padx=5, pady=5)
+boton_tangente.grid(row=3, column=4, padx=5, pady=5)
+boton_atan.grid(row=3, column=5, padx=5, pady=5)
 
 boton1.grid(row=4, column=0, padx=5, pady=5)
 boton2.grid(row=4, column=1, padx=5, pady=5)
 boton3.grid(row=4, column=2, padx=5, pady=5)
 boton_resta.grid(row=4, column=3, padx=5, pady=5)
-# boton_tangente.grid(row=4, column=4, padx=5,pady=5)
+boton_log.grid(row=4, column=4, padx=5, pady=5)
+boton_alog.grid(row=4, column=5, padx=5, pady=5)
 
 boton0.grid(row=5, column=1, padx=5, pady=5)
 boton_punto.grid(row=5, column=0, padx=5, pady=5)
 boton_igual.grid(row=5, column=2, padx=5, pady=5)
 boton_potencia.grid(row=5, column=3, padx=5, pady=5)
-
-# boton_logaritmo.grid(row=5, column=4, padx=5, pady=5)
+boton_ln.grid(row=5, column=4, pady=5, padx=5)
+boton_aln.grid(row=5, column=5, padx=5, pady=5)
 
 ventana.mainloop()
